@@ -18,20 +18,23 @@ Earn 10% rebate on fees (I put maximum for you).
 # Install dependencies
 pip install -r requirements.txt
 
-# Run data collector for at least 15 minutes
+# Run data collector for at least 1 hour
 python data_collector.py # Collect real-time market data (check variable `LIST_MARKETS` to add or remove markets)
 
 # run calculation of parameters
-python calculate_avellaneda_parameters.py --symbol BNBUSDT  # Calculate dynamic spreads
-python find_trend.py --symbol BNBUSDT --interval 5m        # Trend direction determination with SuperTrend
+python calculate_avellaneda_parameters.py --symbol BNBUSDT --minutes 5  # Calculate dynamic spreads on BNBUSDT based on 5-minutes data chuncks (orders executed, bid-ask spreads)
+python find_trend.py --symbol BNBUSDT --interval 5m  # Trend direction determination with SuperTrend based on 5-minutes kline candles
 
+# the above scripts do not need API credentials, but the market_maker.py does need it
 # Configure API credentials (create .env file with your credentials)
 # See configuration section below for required variables
 
-# Run the market maker
+# Run the market maker on BNBUSDT
 python market_maker.py --symbol BNBUSDT
 
 ```
+
+Use docker compose to run everything at once (see below).
 
 ## Dependencies
 
@@ -143,6 +146,8 @@ python find_trend.py --symbol BNBUSDT --interval 5m        # Trend analysis with
 
 # Monitoring and utilities
 python terminal_dashboard.py            # Comprehensive account dashboard to check if everything is going well
+python get_my_trading_volume.py --symbol BNBUSDT --days 7  # Get your trading volume on BNB for last 7 days
+python get_my_trading_volume.py --days 30                  # Get your trading volume across all symbols for last 30 days
 ```
 
 ## Terminal Dashboard
