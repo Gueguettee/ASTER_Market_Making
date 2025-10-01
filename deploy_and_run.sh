@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # ---------- CONFIGURATION ----------
-SSH_KEY="/mnt/c/users/gaeta/.ssh/tokyo.pem"
+SSH_KEY_WINDOWS="/mnt/c/users/gaeta/.ssh/tokyo.pem"
+SSH_KEY_MAC="$HOME/.ssh/tokyo.pem"
 SSH_USER="ubuntu"
 REMOTE_DIR="/home/$SSH_USER/$(basename "$(pwd)")"
 LOCAL_CODE_DIR="."
@@ -25,23 +26,37 @@ START_AND_STOP_INSTANCE=false
 set -e  # Exit on any error
 shopt -s dotglob           # include hidden files in globs
 
-SSH_KEY=$(eval echo "$SSH_KEY")
 mkdir -p ~/.ssh
-cp $SSH_KEY ~/.ssh/ssh_key.pem -f
+# If on Windows, copy the SSH key to WSL
+if [[ "$(uname -r)" == *"Microsoft"* ]]; then
+  SSH_KEY="$SSH_KEY_WINDOWS"
+  cp "$SSH_KEY" ~/.ssh/ssh_key.pem -f
+fi
+# If on Mac, copy the SSH key to Linux subsystem
+if [[ "$(uname)" == "Darwin" ]]; then
+  SSH_KEY="$SSH_KEY_MAC"
+  sudo cp $SSH_KEY ~/.ssh/ssh_key.pem
+fi
 SSH_KEY=~/.ssh/ssh_key.pem
-chmod 400 $SSH_KEY
+SSH_KEY=$(eval echo $SSH_KEY)  # Expand ~
+chmod 700 ~/.ssh
+chmod 600 $SSH_KEY
 
 configure_local() {
-  sudo apt update && sudo apt upgrade -y
+  if [[ "$(uname)" != "Darwin" ]]; then
+    sudo apt update && sudo apt upgrade -y
 
-  # Check required packages
-  for package in "${LOCAL_PACKAGES[@]}"; do
-    if ! command -v $package &> /dev/null; then
-      sudo apt install -y $package
-    fi
-  done
+    # Check required packages
+    for package in "${LOCAL_PACKAGES[@]}"; do
+      if ! command -v $package &> /dev/null; then
+        sudo apt install -y $package
+      fi
+    done
 
-  sudo apt autoremove -y
+    sudo apt autoremove -y
+  else
+    echo "⚠️ Assuming required packages are installed on Mac."
+  fi
 }
 
 # Configure AWS CLI from credentials JSON
@@ -53,19 +68,26 @@ configure_aws_cli() {
 
   # If aws is not installed
   if ! command -v aws &> /dev/null; then
-    # If x86_64 architecture
-    if [[ "$(uname -m)" == "x86_64" ]]; then
-        echo "⬇️ Installing AWS CLI for x86_64..."
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    # If not Mac:
+    if [[ "$(uname)" != "Darwin" ]]; then
+      # If x86_64 architecture
+      if [[ "$(uname -m)" == "x86_64" ]]; then
+          echo "⬇️ Installing AWS CLI for x86_64..."
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      else
+          echo "⬇️ Installing AWS CLI for aarch64..."
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+      fi
+      unzip awscliv2.zip
+      sudo ./aws/install
+      export PATH=/usr/local/bin:$PATH
+      rm -rf awscliv2.zip aws
     else
-        echo "⬇️ Installing AWS CLI for aarch64..."
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+      curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+      sudo installer -pkg AWSCLIV2.pkg -target /
+      rm -f AWSCLIV2.pkg
     fi
-    unzip awscliv2.zip
-    sudo ./aws/install
-    export PATH=/usr/local/bin:$PATH
   fi
-  rm -rf awscliv2.zip aws
 
   AWS_ACCESS_KEY_ID=$(jq -r '.aws_access_key_id' "$CREDENTIALS_FILE")
   AWS_SECRET_ACCESS_KEY=$(jq -r '.aws_secret_access_key' "$CREDENTIALS_FILE")
@@ -142,6 +164,7 @@ sudo apt update && sudo apt upgrade -y
 for package in "${INSTANCE_PACKAGES[@]}"; do
   if ! command -v $package &> /dev/null; then
     echo "⬇️ Installing missing package: $package"
+    sudo apt install -y $package
   fi
 done
 
