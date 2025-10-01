@@ -9,7 +9,7 @@ import requests
 from datetime import datetime
 from collections import deque
 
-LIST_MARKETS = ['ASTERUSDT', 'BTCUSDT', 'ETHUSDT', 'USD1USDT', 'BNBUSDT', 'AAPLUSDT']
+LIST_MARKETS = ['ASTERUSDT', 'BNBUSDT', 'HYPEUSDT', 'ATOMUSDT']
 
 class WebSocketDataCollector:
     def __init__(self, symbols, flush_interval=5, order_book_levels=10):

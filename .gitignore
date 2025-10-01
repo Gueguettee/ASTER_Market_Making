@@ -7,3 +7,4 @@ params/*.csv
 gueguette.json
 aws_instance.json
 aws_credentials.json
+ASTER_data

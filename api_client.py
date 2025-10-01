@@ -119,22 +119,25 @@ class ApiClient:
         signed_params = self._sign(params)
         headers = {'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'PythonApp/1.0'}
 
-        # print("📤 Sending order request with params:", params)
-        # print("🔐 Signed params keys:", list(signed_params.keys()))
-        # print("📋 Full signed params:", signed_params)
+        print("📤 Sending order request with params:", params)
+        print("🔐 Signed params keys:", list(signed_params.keys()))
+        print("📋 Full signed params:", signed_params)
 
         async with self.session.post(url, data=signed_params, headers=headers) as response:
             # print(f"📨 Response status: {response.status}")
             if not response.ok:
                 error_body = await response.text()
-                # print(f"❌ API Error on order placement: Status={response.status}")
-                # print(f"❌ Error body: {error_body}")
-                # print(f"📋 Request params that caused error: {params}")
-                # print(f"🔐 Signed params that caused error: {signed_params}")
+                print(f"❌ API Error on order placement: Status={response.status}")
+                print(f"❌ Error body: {error_body}")
+                print(f"📋 Request params that caused error: {params}")
+                print(f"🔐 Signed params that caused error: {signed_params}")
             else:
-                # print("✅ Order request successful")
+                print("✅ Order request successful")
                 pass
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                raise Exception(f"Order placement failed: {e}, Response body: {await response.text()}, Request params: {params}, Signed params: {signed_params}")
             result = await response.json()
             # print("📨 Order response:", result)
             return result

@@ -11,9 +11,9 @@ INSTANCE_FILE="$LOCAL_CODE_DIR/secrets/aws_instance.json"
 CREDENTIALS_FILE="$LOCAL_CODE_DIR/secrets/aws_credentials.json"
 # Files and directories to copy to the instance during installation
 INSTALL_FILES=(".")
-# Files and directories to copy to the instance before each run, everything except lighter_data:
+# Files and directories to copy to the instance before each run, everything except ASTER_data:
 EXECUTION_FILES=(".")
-FILES_TO_RETRIEVE=(".")
+FILES_TO_RETRIEVE=("logs" "params" "ASTER_data")
 COMMAND_TO_RUN="docker compose up"
 COMMAND_TO_START_RUN="docker compose up -d"
 COMMAND_TO_STOP_RUN="docker compose down"
@@ -260,19 +260,21 @@ sudo rm -f $REMOTE_CODE_DIR/$(basename $ZIP_FILE)
   echo "🚀 Launch command on instance..."
 
   if [[ "$instruction" == "startRun" ]]; then
-    ssh -i "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" -t "
+    ssh -i "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" "
+sudo timedatectl set-ntp true
 cd \"$REMOTE_DIR\"
 echo '🏁 Starting execution...'
 $COMMAND_TO_START_RUN
 "
   elif [[ "$instruction" == "stopRun" ]]; then
-    ssh -i "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" -t "
+    ssh -i "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" "
 cd \"$REMOTE_DIR\"
 echo '🛑 Stopping execution...'
 $COMMAND_TO_STOP_RUN
 "
   else
     ssh -i "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" -t "
+sudo timedatectl set-ntp true
 cd \"$REMOTE_DIR\"
 echo '🏁 Starting execution...'
 $COMMAND_TO_RUN

@@ -1,0 +1,16 @@
+{
+    "best_parameters": {
+        "atr_period": 100,
+        "atr_multiplier": 6.9
+    },
+    "backtest_performance": {
+        "sharpe_ratio": -0.17564075730726744,
+        "cumulative_return_pct": -23.833372852215806,
+        "trades": 124
+    },
+    "current_signal": {
+        "trend": -1,
+        "interval": "5m",
+        "timestamp_utc": "2025-10-01T11:05:00"
+    }
+}

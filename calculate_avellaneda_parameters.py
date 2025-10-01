@@ -720,14 +720,14 @@ def main():
     script_dir = Path(__file__).parent.absolute()
     default_if_not_env = script_dir / 'ASTER_data'
     HL_DATA_DIR = os.getenv('HL_DATA_LOC', default_if_not_env)
-    csv_file_path = os.path.join(HL_DATA_DIR, f'prices_{TICKER}USDT.csv')
+    csv_file_path = os.path.join(HL_DATA_DIR, f'prices_{TICKER}.csv')
 
     if not os.path.exists(csv_file_path):
         print(f"Error: File {csv_file_path} not found!")
         sys.exit(1)
 
     mid_price_df = load_and_resample_mid_price(csv_file_path)
-    trades_df = load_trades_data(os.path.join(HL_DATA_DIR, f'trades_{TICKER}USDT.csv'))
+    trades_df = load_trades_data(os.path.join(HL_DATA_DIR, f'trades_{TICKER}.csv'))
     buy_trades = trades_df[trades_df['side'] == 'buy'].copy()
     sell_trades = trades_df[trades_df['side'] == 'sell'].copy()
     print(f"Loaded {len(mid_price_df)} data points from {mid_price_df.index.min()} to {mid_price_df.index.max()}.")

@@ -17,8 +17,8 @@ FLIP_MODE = False # True for short-biased (SELL first), False for long-biased (B
 DEFAULT_BUY_SPREAD = 0.006   # 0.6% below mid-price for buy orders
 DEFAULT_SELL_SPREAD = 0.006  # 0.6% above mid-price for sell orders
 USE_AVELLANEDA_SPREADS = True  # Toggle to pull spreads from Avellaneda parameter files
-DEFAULT_LEVERAGE = 1
-DEFAULT_BALANCE_FRACTION = 0.2  # Use fraction of available balance for each order
+DEFAULT_LEVERAGE = 2
+DEFAULT_BALANCE_FRACTION = 0.99  # Use fraction of available balance for each order
 POSITION_THRESHOLD_USD = 15.0  # USD threshold to switch to sell mode in case of partial order fill
 
 # TIMING (in seconds)
@@ -637,6 +637,9 @@ def _get_spreads_for_symbol(symbol):
 
     log = logging.getLogger('SpreadLoader')
     buy_override, sell_override, source_path = _load_spread_overrides(symbol_key)
+    
+    if buy_override is None or sell_override is None:
+        raise ValueError(f"Could not load valid spreads for symbol {symbol_key} from parameter files.")
 
     buy_spread = buy_override if buy_override is not None else DEFAULT_BUY_SPREAD
     sell_spread = sell_override if sell_override is not None else DEFAULT_SELL_SPREAD
@@ -985,10 +988,9 @@ async def market_making_loop(state, client, args):
 
                 log.info(f"Order placed successfully: ID={state.active_order_id}")
                 log.debug(f"Full order response: {active_order}")
-            except Exception as order_error:
-                log.error(f"Failed to place order: {order_error}")
-                log.error(f"Order parameters: symbol={args.symbol}, price={formatted_price}, quantity={formatted_quantity}, side={side}, reduceOnly={reduce_only}")
-                raise
+            except Exception as cre:
+                log.error(f"Client response error placing order: {cre}")
+                raise cre
 
             filled_qty = 0.0
             try:

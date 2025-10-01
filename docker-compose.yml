@@ -57,6 +57,7 @@ services:
       - ./params:/app/params
       - ./market_maker.py:/app/market_maker.py:ro
       - ./api_client.py:/app/api_client.py:ro
+      - ./market_maker.log:/app/market_maker.log:rw
       - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
       - ./.env:/app/.env:ro
     command: >
@@ -86,3 +87,127 @@ services:
         sleep $${TREND_REFRESH_MINUTES}m;
       done"
     restart: unless-stopped
+
+  # avellaneda-params2:
+  #   build: .
+  #   container_name: aster_avellaneda_params2
+  #   environment:
+  #     - PARAM_REFRESH_MINUTES=10
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ASTER_data:/app/ASTER_data
+  #     - ./params:/app/params
+  #     - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+  #     - ./api_client.py:/app/api_client.py:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python calculate_avellaneda_parameters.py HYPEUSDT --minutes $$PARAM_REFRESH_MINUTES;
+  #       sleep $${PARAM_REFRESH_MINUTES}m;
+  #     done"
+  #   restart: unless-stopped
+
+  # market-maker2:
+  #   build: .
+  #   container_name: aster_market_maker2
+  #   environment:
+  #     - RESTART_MINUTES=2
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ASTER_data:/app/ASTER_data
+  #     - ./params:/app/params
+  #     - ./market_maker.py:/app/market_maker.py:ro
+  #     - ./api_client.py:/app/api_client.py:ro
+  #     - ./market_maker.log:/app/market_maker.log:rw
+  #     - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+  #     - ./.env:/app/.env:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python market_maker.py --symbol HYPEUSDT;
+  #       sleep $${RESTART_MINUTES}m;
+  #     done"
+  #   depends_on:
+  #     - data-collector
+  #     - avellaneda-params
+  #   restart: unless-stopped
+
+  # trend-finder2:
+  #   build: .
+  #   container_name: aster_trend_finder2
+  #   environment:
+  #     - TREND_REFRESH_MINUTES=5
+  #     - TREND_INTERVAL=5m
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./params:/app/params
+  #     - ./find_trend.py:/app/find_trend.py:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python find_trend.py --symbol HYPEUSDT --interval $$TREND_INTERVAL;
+  #       sleep $${TREND_REFRESH_MINUTES}m;
+  #     done"
+  #   restart: unless-stopped
+
+  # avellaneda-params3:
+  #   build: .
+  #   container_name: aster_avellaneda_params3
+  #   environment:
+  #     - PARAM_REFRESH_MINUTES=10
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ASTER_data:/app/ASTER_data
+  #     - ./params:/app/params
+  #     - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+  #     - ./api_client.py:/app/api_client.py:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python calculate_avellaneda_parameters.py BNBUSDT --minutes $$PARAM_REFRESH_MINUTES;
+  #       sleep $${PARAM_REFRESH_MINUTES}m;
+  #     done"
+  #   restart: unless-stopped
+
+  # market-maker3:
+  #   build: .
+  #   container_name: aster_market_maker3
+  #   environment:
+  #     - RESTART_MINUTES=2
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./ASTER_data:/app/ASTER_data
+  #     - ./params:/app/params
+  #     - ./market_maker.py:/app/market_maker.py:ro
+  #     - ./api_client.py:/app/api_client.py:ro
+  #     - ./market_maker.log:/app/market_maker.log:rw
+  #     - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+  #     - ./.env:/app/.env:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python market_maker.py --symbol BNBUSDT;
+  #       sleep $${RESTART_MINUTES}m;
+  #     done"
+  #   depends_on:
+  #     - data-collector
+  #     - avellaneda-params
+  #   restart: unless-stopped
+
+  # trend-finder3:
+  #   build: .
+  #   container_name: aster_trend_finder3
+  #   environment:
+  #     - TREND_REFRESH_MINUTES=5
+  #     - TREND_INTERVAL=5m
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./params:/app/params
+  #     - ./find_trend.py:/app/find_trend.py:ro
+  #   command: >
+  #     sh -c "while true; do
+  #       python find_trend.py --symbol BNBUSDT --interval $$TREND_INTERVAL;
+  #       sleep $${TREND_REFRESH_MINUTES}m;
+  #     done"
+  #   restart: unless-stopped
