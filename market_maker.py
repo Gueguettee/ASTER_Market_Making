@@ -18,7 +18,7 @@ DEFAULT_BUY_SPREAD = 0.006   # 0.6% below mid-price for buy orders
 DEFAULT_SELL_SPREAD = 0.006  # 0.6% above mid-price for sell orders
 USE_AVELLANEDA_SPREADS = True  # Toggle to pull spreads from Avellaneda parameter files
 DEFAULT_LEVERAGE = 2
-DEFAULT_BALANCE_FRACTION = 0.99  # Use fraction of available balance for each order
+DEFAULT_BALANCE_FRACTION = 0.50  # Use fraction of available balance for each order
 POSITION_THRESHOLD_USD = 15.0  # USD threshold to switch to sell mode in case of partial order fill
 
 # TIMING (in seconds)

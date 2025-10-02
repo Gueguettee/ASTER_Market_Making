@@ -1,0 +1,40 @@
+{
+    "ticker": "HYPEUSDT",
+    "timestamp": "2025-10-01T20:29:09.791615",
+    "market_data": {
+        "mid_price": 46.8795,
+        "sigma": 0.0006299838757798673,
+        "A": 0.7622009507704144,
+        "k": 18.0800726669801
+    },
+    "optimal_parameters": {
+        "gamma": 50.63435666666666
+    },
+    "current_state": {
+        "time_remaining": 0.5,
+        "inventory": 1,
+        "minutes_window": 10,
+        "ma_window": 3
+    },
+    "calculated_values": {
+        "reservation_price": 46.87948995212627,
+        "gap": 1.0047873729490675e-05,
+        "spread_base": 0.05274692160494251,
+        "half_spread": 0.026373460802471254
+    },
+    "limit_orders": {
+        "ask_price": 46.90585336505501,
+        "bid_price": 46.85310644345007,
+        "delta_a": 0.026363412928741763,
+        "delta_b": 0.026383508676200745,
+        "delta_a_percent": 0.05623654887262399,
+        "delta_b_percent": 0.056279415685322465
+    },
+    "trade_summary": {
+        "period_start": "2025-10-01T20:10:00",
+        "period_end": "2025-10-01T20:20:00",
+        "buy_count": 364,
+        "sell_count": 636,
+        "total_count": 1000
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "ticker": "ASTERUSDT",
+    "timestamp": "2025-10-01T19:10:33.365079",
+    "market_data": {
+        "mid_price": 1.6422500000000002,
+        "sigma": 0.0016179461912039011,
+        "A": 0.0016666666679921445,
+        "k": 3.215380739654585e-09
+    },
+    "optimal_parameters": {
+        "gamma": 2124.94224
+    },
+    "current_state": {
+        "time_remaining": 0.5,
+        "inventory": 1,
+        "minutes_window": 10,
+        "ma_window": 3
+    },
+    "calculated_values": {
+        "reservation_price": 1.6394687163556334,
+        "gap": 0.0027812836443668054,
+        "spread_base": 0.028397810482350485,
+        "half_spread": 0.014198905241175242
+    },
+    "limit_orders": {
+        "ask_price": 1.6508863379524419,
+        "bid_price": 1.6224885274700913,
+        "delta_a": 0.011417621596808437,
+        "delta_b": 0.01698018888554205,
+        "delta_a_percent": 0.6952425998969972,
+        "delta_b_percent": 1.0339588299919042
+    },
+    "trade_summary": {
+        "period_start": "2025-10-01T17:40:00",
+        "period_end": "2025-10-01T17:50:00",
+        "buy_count": 2134,
+        "sell_count": 2345,
+        "total_count": 4479
+    }
+}

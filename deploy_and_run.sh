@@ -18,8 +18,7 @@ FILES_TO_RETRIEVE=("logs" "params" "ASTER_data")
 COMMAND_TO_RUN="docker compose up"
 COMMAND_TO_START_RUN="docker compose up -d"
 COMMAND_TO_STOP_RUN="docker compose down"
-LOCAL_PACKAGES=(jq ssh rsync curl zip unzip dos2unix)
-INSTANCE_PACKAGES=(jq dos2unix docker.io docker-compose docker-compose-v2 curl ssh zip unzip)
+LOCAL_PACKAGES=("jq" "ssh" "rsync" "curl" "zip" "unzip" "dos2unix")
 START_AND_STOP_INSTANCE=false
 # -----------------------------------
 
@@ -46,10 +45,14 @@ configure_local() {
   if [[ "$(uname)" != "Darwin" ]]; then
     sudo apt update && sudo apt upgrade -y
 
-    # Check required packages
-    for package in "${LOCAL_PACKAGES[@]}"; do
-      if ! command -v $package &> /dev/null; then
-        sudo apt install -y $package
+    for entry in "${LOCAL_PACKAGES[@]}"; do
+      pkg="${entry%%:*}"
+      cmd="${entry##*:}"
+
+      echo "🔍 Checking package: $pkg (command: $cmd)"
+      if ! command -v "$cmd" &> /dev/null; then
+        echo "⬇️ Installing missing package: $pkg"
+        sudo apt install -y "$pkg"
       fi
     done
 
@@ -158,15 +161,12 @@ stop_instance() {
 install_instance() {
   echo "✅ Connecting to AWS instance: $INSTANCE_IP"
   ssh -ti "$SSH_KEY" "$SSH_USER@$INSTANCE_IP" << EOF
+#!/usr/bin/bash
 set -e
 
 sudo apt update && sudo apt upgrade -y
-for package in "${INSTANCE_PACKAGES[@]}"; do
-  if ! command -v $package &> /dev/null; then
-    echo "⬇️ Installing missing package: $package"
-    sudo apt install -y $package
-  fi
-done
+
+sudo apt install -y dos2unix docker.io curl unzip zip openssh-client docker-compose docker-compose-v2
 
 echo "🔍 Detecting system architecture..."
 ARCH=\$(uname -m)
