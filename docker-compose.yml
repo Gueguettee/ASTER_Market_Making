@@ -88,24 +88,43 @@ services:
       done"
     restart: unless-stopped
 
-  # avellaneda-params2:
-  #   build: .
-  #   container_name: aster_avellaneda_params2
-  #   environment:
-  #     - PARAM_REFRESH_MINUTES=10
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - ./ASTER_data:/app/ASTER_data
-  #     - ./params:/app/params
-  #     - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
-  #     - ./api_client.py:/app/api_client.py:ro
-  #   command: >
-  #     sh -c "while true; do
-  #       python calculate_avellaneda_parameters.py HYPEUSDT --minutes $$PARAM_REFRESH_MINUTES;
-  #       sleep $${PARAM_REFRESH_MINUTES}m;
-  #     done"
-  #   restart: unless-stopped
+  avellaneda-params2:
+    build: .
+    container_name: aster_avellaneda_params2
+    environment:
+      - PARAM_REFRESH_MINUTES=10
+    env_file:
+      - .env
+    volumes:
+      - ./ASTER_data:/app/ASTER_data
+      - ./params:/app/params
+      - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+      - ./api_client.py:/app/api_client.py:ro
+    command: >
+      sh -c "while true; do
+        python calculate_avellaneda_parameters.py ASTERUSDT --minutes $$PARAM_REFRESH_MINUTES;
+        sleep $${PARAM_REFRESH_MINUTES}m;
+      done"
+    restart: unless-stopped
+
+  avellaneda-params3:
+    build: .
+    container_name: aster_avellaneda_params3
+    environment:
+      - PARAM_REFRESH_MINUTES=10
+    env_file:
+      - .env
+    volumes:
+      - ./ASTER_data:/app/ASTER_data
+      - ./params:/app/params
+      - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+      - ./api_client.py:/app/api_client.py:ro
+    command: >
+      sh -c "while true; do
+        python calculate_avellaneda_parameters.py ATOMUSDT --minutes $$PARAM_REFRESH_MINUTES;
+        sleep $${PARAM_REFRESH_MINUTES}m;
+      done"
+    restart: unless-stopped
 
   # market-maker2:
   #   build: .

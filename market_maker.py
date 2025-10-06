@@ -17,8 +17,8 @@ FLIP_MODE = False # True for short-biased (SELL first), False for long-biased (B
 DEFAULT_BUY_SPREAD = 0.006   # 0.6% below mid-price for buy orders
 DEFAULT_SELL_SPREAD = 0.006  # 0.6% above mid-price for sell orders
 USE_AVELLANEDA_SPREADS = True  # Toggle to pull spreads from Avellaneda parameter files
-DEFAULT_LEVERAGE = 2
-DEFAULT_BALANCE_FRACTION = 0.50  # Use fraction of available balance for each order
+DEFAULT_LEVERAGE = 4
+DEFAULT_BALANCE_FRACTION = 0.99*DEFAULT_LEVERAGE  # Use fraction of available balance for each order
 POSITION_THRESHOLD_USD = 15.0  # USD threshold to switch to sell mode in case of partial order fill
 
 # TIMING (in seconds)
@@ -499,7 +499,7 @@ async def supertrend_signal_updater(state, symbol):
                 with open(params_file, 'r') as f:
                     data = json.load(f)
                 
-                new_signal = data.get('current_signal', {}).get('trend')
+                new_signal = 1# data.get('current_signal', {}).get('trend')
                 
                 if new_signal in [1, -1]:
                     if state.supertrend_signal != new_signal:

@@ -1,0 +1,40 @@
+{
+    "ticker": "ATOMUSDT",
+    "timestamp": "2025-10-06T07:36:31.354286",
+    "market_data": {
+        "mid_price": 4.155,
+        "sigma": 0.002822616551644993,
+        "A": 0.0016666666679921445,
+        "k": 3.215380739654585e-09
+    },
+    "optimal_parameters": {
+        "gamma": 0.5
+    },
+    "current_state": {
+        "time_remaining": 0.5,
+        "inventory": 1,
+        "minutes_window": 10,
+        "ma_window": 3
+    },
+    "calculated_values": {
+        "reservation_price": 4.154998008208951,
+        "gap": 1.9917910494271496e-06,
+        "spread_base": 75.44869353626851,
+        "half_spread": 37.724346768134254
+    },
+    "limit_orders": {
+        "ask_price": 41.87934278455215,
+        "bid_price": -33.56935075171636,
+        "delta_a": 37.7243447763432,
+        "delta_b": 37.724348759925306,
+        "delta_a_percent": 907.9264687447219,
+        "delta_b_percent": 907.9265646191409
+    },
+    "trade_summary": {
+        "period_start": "2025-10-06T07:20:00",
+        "period_end": "2025-10-06T07:30:00",
+        "buy_count": 0,
+        "sell_count": 0,
+        "total_count": 0
+    }
+}
